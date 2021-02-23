@@ -17,8 +17,8 @@ engine = create_engine("mysql+mysqlconnector://{}:{}@{}:{}/{}".format(username, 
 meta = MetaData(engine)
 conn = engine.connect()
 
-dynamicData = Table(
-    'dynamicData', meta,
+dynamicData1 = Table(
+    'dynamicData1', meta,
     Column('Insert_ID', Integer, primary_key = True),
     Column('number', Integer, primary_key = True),
     Column('bike_stands', Integer),
@@ -48,7 +48,8 @@ KEY = "e47f3963b98124079388f63783dc9c319b0ae443"
 iterator = 0
 
 while True:
-        try:           
+        try:     
+                print('Starting Loop')
                 r = requests.get(STATIONS_URI, params = {"apiKey": KEY, "contract": NAME})
                 JSON(r.json())
 
@@ -57,10 +58,12 @@ while True:
                         value['Insert_ID'] = iterator
                         print(value['Insert_ID'])
 
-                ins = dynamicData.insert().values(values)
+                ins = dynamicData1.insert().values(values)
                 conn.execute(ins)
-
+                print('Finishing execute')
                 time.sleep(5*60)
+                print('Restarting Loop')
+
                 iterator += 1
         except:
                 print('Error')
