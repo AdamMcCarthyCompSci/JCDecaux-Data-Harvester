@@ -29,9 +29,6 @@ dynamicData1 = Table(
 
 meta.create_all(conn)
 
-# select * from stations, availability where availability.number = stations.number
-# Then you can attach some GROUP BY aggregations with the other table for the machine learning model
-
 def get_station(obj):
         return {'number': obj['number'],
         'Insert_ID': 0,
@@ -47,23 +44,19 @@ KEY = "e47f3963b98124079388f63783dc9c319b0ae443"
 
 iterator = 0
 
-while True:
-        try:     
-                print('Starting Loop')
-                r = requests.get(STATIONS_URI, params = {"apiKey": KEY, "contract": NAME})
-                JSON(r.json())
+print('Starting Loop')
+r = requests.get(STATIONS_URI, params = {"apiKey": KEY, "contract": NAME})
+JSON(r.json())
 
-                values = list(map(get_station, r.json()))
-                for value in values:
-                        value['Insert_ID'] = iterator
-                        print(value['Insert_ID'])
+values = list(map(get_station, r.json()))
+for value in values:
+        value['Insert_ID'] = iterator
+        print(value['Insert_ID'])
 
-                ins = dynamicData1.insert().values(values)
-                conn.execute(ins)
-                print('Finishing execute')
-                time.sleep(1*20)
-                print('Restarting Loop')
+ins = dynamicData1.insert().values(values)
+conn.execute(ins)
+print('Finishing execute')
+time.sleep(1*20)
+print('Restarting Loop')
 
-                iterator += 1
-        except:
-                print('Error')
+iterator += 1
