@@ -66,6 +66,6 @@ while True:
 
                 iterator += 1
         except:
-                print('Error')
+                print(sys.exc_info()[0])
                 iterator += 1
                 time.sleep(5*60)
