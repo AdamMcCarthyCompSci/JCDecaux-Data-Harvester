@@ -45,7 +45,7 @@ NAME = "Dublin"
 STATIONS_URI = "https://api.jcdecaux.com/vls/v1/stations"
 KEY = "e47f3963b98124079388f63783dc9c319b0ae443"
 
-iterator = 0
+iterator = 56
 
 while True:
         try:     
