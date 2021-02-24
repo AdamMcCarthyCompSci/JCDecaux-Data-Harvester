@@ -17,8 +17,8 @@ engine = create_engine("mysql+mysqlconnector://{}:{}@{}:{}/{}".format(username, 
 meta = MetaData(engine)
 conn = engine.connect()
 
-dynamicDataV5 = Table(
-    'dynamicDataV5', meta,
+dynamicDataV12 = Table(
+    'dynamicDataV12', meta,
     Column('Insert_ID', Integer, primary_key = True),
     Column('number', Integer, primary_key = True),
     Column('bike_stands', Integer),
@@ -33,32 +33,29 @@ meta.create_all(conn)
 # Then you can attach some GROUP BY aggregations with the other table for the machine learning model
 
 def get_station(obj):
-        return {'number': obj['number'],
-        'Insert_ID': 0,
-        'bike_stands': obj['bike_stands'],
-        'available_bike_stands': obj['available_bike_stands'],
-        'available_bikes': obj['available_bikes'],
-        'last_update': datetime.datetime.fromtimestamp( int(obj['last_update'] / 1e3) )
-        }
+        return {'number': obj['number'],'bike_stands': obj['bike_stands'],'available_bike_stands': obj['available_bike_stands'],'available_bikes': obj['available_bikes'],'last_update': datetime.datetime.fromtimestamp( int(obj['last_update'] / 1e3) )}
 
 NAME = "Dublin"
 STATIONS_URI = "https://api.jcdecaux.com/vls/v1/stations"
-KEY = "e47f3963b98124079388f63783dc9c319b0ae443"
+KEY = "53fa78aead76e2416050fc002610856adf0b2cee"
 
 iterator = 56
+r = requests.get(STATIONS_URI, params = {"apiKey": KEY, "contract": NAME})
+JSON(r.json())
 
 while True:
-        try:     
+        try:
                 print('Starting Loop')
                 r = requests.get(STATIONS_URI, params = {"apiKey": KEY, "contract": NAME})
                 JSON(r.json())
-
+                print('request to map')
                 values = list(map(get_station, r.json()))
                 for value in values:
                         value['Insert_ID'] = iterator
                         print(value['Insert_ID'])
-
-                ins = dynamicDataV5.insert().values(values)
+                print('map to insert')
+                ins = dynamicDataV12.insert().values(values)
+                print('insert to execute')
                 conn.execute(ins)
                 print('Finishing execute')
                 time.sleep(5*60)
@@ -66,6 +63,7 @@ while True:
 
                 iterator += 1
         except Exception as e:
-                print(e))
+                print(e)
                 iterator += 1
                 time.sleep(5*60)
+
