@@ -67,3 +67,4 @@ while True:
                 iterator += 1
         except:
                 print('Error')
+                iterator += 1
