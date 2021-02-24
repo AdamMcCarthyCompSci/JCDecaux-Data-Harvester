@@ -17,8 +17,8 @@ engine = create_engine("mysql+mysqlconnector://{}:{}@{}:{}/{}".format(username, 
 meta = MetaData(engine)
 conn = engine.connect()
 
-dynamicData1 = Table(
-    'dynamicData1', meta,
+dynamicDataV2 = Table(
+    'dynamicDataV2', meta,
     Column('Insert_ID', Integer, primary_key = True),
     Column('number', Integer, primary_key = True),
     Column('bike_stands', Integer),
@@ -58,13 +58,14 @@ while True:
                         value['Insert_ID'] = iterator
                         print(value['Insert_ID'])
 
-                ins = dynamicData1.insert().values(values)
+                ins = dynamicDataV2.insert().values(values)
                 conn.execute(ins)
                 print('Finishing execute')
-                time.sleep(1*20)
+                time.sleep(5*60)
                 print('Restarting Loop')
 
                 iterator += 1
         except:
                 print('Error')
                 iterator += 1
+                time.sleep(5*60)
