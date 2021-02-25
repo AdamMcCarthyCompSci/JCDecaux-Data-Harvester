@@ -39,7 +39,7 @@ NAME = "Dublin"
 STATIONS_URI = "https://api.jcdecaux.com/vls/v1/stations"
 KEY = "53fa78aead76e2416050fc002610856adf0b2cee"
 
-iterator = 56
+iterator = 197
 r = requests.get(STATIONS_URI, params = {"apiKey": KEY, "contract": NAME})
 JSON(r.json())
 
