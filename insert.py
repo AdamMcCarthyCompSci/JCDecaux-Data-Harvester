@@ -1,4 +1,4 @@
-from sqlalchemy import Table,Column,Integer,Float,String,MetaData,DateTime,create_engine
+from sqlalchemy import Table,Column,Integer,Float,String,MetaData,DateTime,create_engine,types
 from sqlalchemy.orm import sessionmaker
 import requests
 import json
@@ -29,17 +29,21 @@ dynamicDataV6 = Table(
 
 meta.create_all(conn)
 
-# select * from stations, availability where availability.number = stations.number
-# Then you can attach some GROUP BY aggregations with the other table for the machine learning model
+NoneType = type(None)
 
 def get_station(obj):
-        return {'number': obj['number'],'bike_stands': obj['bike_stands'],'available_bike_stands': obj['available_bike_stands'],'available_bikes': obj['available_bikes'],'last_update': datetime.datetime.fromtimestamp( int(obj['last_update'] / 1e3) )}
-
+        print("before")
+        try:
+                x = datetime.datetime.fromtimestamp( int(obj['last_update'] / 1e3) )
+        except:
+                x = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        return {'number': obj['number'],'bike_stands': obj['bike_stands'],'available_bike_stands': obj['available_bike_stands'],'available_bikes': obj['available_bikes'],'last_update': x}
+ 
 NAME = "Dublin"
 STATIONS_URI = "https://api.jcdecaux.com/vls/v1/stations"
 KEY = "53fa78aead76e2416050fc002610856adf0b2cee"
 
-iterator = 197
+iterator = 211
 r = requests.get(STATIONS_URI, params = {"apiKey": KEY, "contract": NAME})
 JSON(r.json())
 
@@ -52,7 +56,6 @@ while True:
                 values = list(map(get_station, r.json()))
                 for value in values:
                         value['Insert_ID'] = iterator
-                        print(value['Insert_ID'])
                 print('map to insert')
                 ins = dynamicDataV6.insert().values(values)
                 print('insert to execute')
