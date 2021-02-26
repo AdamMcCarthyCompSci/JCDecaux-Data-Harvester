@@ -17,8 +17,8 @@ engine = create_engine("mysql+mysqlconnector://{}:{}@{}:{}/{}".format(username, 
 meta = MetaData(engine)
 conn = engine.connect()
 
-dynamicDataV6 = Table(
-    'dynamicDataV6', meta,
+dynamicData = Table(
+    'dynamicData', meta,
     Column('Insert_ID', Integer, primary_key = True),
     Column('number', Integer, primary_key = True),
     Column('bike_stands', Integer),
@@ -43,7 +43,7 @@ NAME = "Dublin"
 STATIONS_URI = "https://api.jcdecaux.com/vls/v1/stations"
 KEY = "53fa78aead76e2416050fc002610856adf0b2cee"
 
-iterator = 211
+iterator = 0
 r = requests.get(STATIONS_URI, params = {"apiKey": KEY, "contract": NAME})
 JSON(r.json())
 
@@ -57,7 +57,7 @@ while True:
                 for value in values:
                         value['Insert_ID'] = iterator
                 print('map to insert')
-                ins = dynamicDataV6.insert().values(values)
+                ins = dynamicData.insert().values(values)
                 print('insert to execute')
                 conn.execute(ins)
                 print('Finishing execute')
