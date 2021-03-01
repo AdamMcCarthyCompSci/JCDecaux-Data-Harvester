@@ -25,8 +25,8 @@ dynamicData = Table(
     Column('available_bike_stands', Integer),
     Column('available_bikes', Integer),
     Column('last_update', DateTime),
-    Column('weather', String),
-    Column('temp', String)
+    Column('weather', String(30)),
+    Column('temp', Float)
 )
 
 meta.create_all(conn)
