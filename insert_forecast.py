@@ -37,11 +37,8 @@ iterator = 0
 while True:
         try:
                 
-                print('Starting Loop')
-                print('Delete db')
                 sql_Delete_query = """Delete from forecast"""
                 conn.execute(sql_Delete_query)
-                print("table emptied")
 
 
                 f = requests.get(forecastURI)
@@ -59,14 +56,9 @@ while True:
                         conn.execute(ins)
                         #JSON(f.json())
                 
-
-                print('map to insert')
                 #ins = forecast_wx.insert().values(data_wx)
-                print('insert to execute')
                 #conn.execute(ins)
-                print('Finishing execute')
                 time.sleep(180*60)
-                print('Restarting Loop')
 
                 iterator += 1
         except Exception as e:
