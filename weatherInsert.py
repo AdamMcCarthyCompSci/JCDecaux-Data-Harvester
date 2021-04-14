@@ -34,7 +34,6 @@ meta.create_all(conn)
 NoneType = type(None)
 
 def get_station(obj):
-        print("before")
         try:
                 x = datetime.datetime.fromtimestamp( int(obj['last_update'] / 1e3) )
         except:
@@ -56,10 +55,8 @@ weatherURI = "https://api.openweathermap.org/data/2.5/weather?id={}&appid={}&uni
 
 while True:
         try:
-                print('Starting Loop')
                 r = requests.get(STATIONS_URI, params = {"apiKey": KEY, "contract": NAME})
                 JSON(r.json())
-                print('request to map')
                 values = list(map(get_station, r.json()))
 
 
@@ -74,17 +71,12 @@ while True:
                         value['weather'] = weather
                         value['temp'] = temp
 
-                print('map to insert')
                 ins = dynamicData.insert().values(values)
-                print('insert to execute')
                 conn.execute(ins)
-                print('Finishing execute')
                 time.sleep(5*60)
-                print('Restarting Loop')
 
                 iterator += 1
         except Exception as e:
-                print(e)
                 iterator += 1
                 time.sleep(5*60)
 
